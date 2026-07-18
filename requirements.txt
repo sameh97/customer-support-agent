@@ -1,7 +1,16 @@
-# LangChain v1.x (requires Python 3.10+)
+# LangChain core
 langchain>=1.3.11
-langchain-openai
-python-dotenv
-langchain-core
+langchain-text-splitters
 langchain-ollama
+langchain-community
+langchain-chroma
+
+# LangGraph (agent orchestration)
 langgraph
+
+# Vector store
+chromadb
+
+# Config
+pydantic-settings
+python-dotenv

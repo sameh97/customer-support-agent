@@ -107,3 +107,9 @@ venv.bak/
 .mypy_cache/
 
 .idea/*
+
+
+
+# Vector databases
+**/chroma_db/
+**/.chroma/
