@@ -14,3 +14,7 @@ chromadb
 # Config
 pydantic-settings
 python-dotenv
+
+
+fastapi
+uvicorn[standard]
