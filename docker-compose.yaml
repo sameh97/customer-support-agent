@@ -1,42 +1,14 @@
 services:
 
-  # ── Your chatbot API ──────────────────────────────────────────────────────
   app:
     build: .
     ports:
       - "8000:8000"
     env_file: .env
     environment:
-      # Override localhost → ollama container name so they can talk
-      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
     volumes:
-      # Persist docs and vector store outside the container
       - ./data:/app/data
-    depends_on:
-      ollama:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # makes host.docker.internal work on Linux/WSL
     restart: unless-stopped
-
-  # ── Local LLM via Ollama ──────────────────────────────────────────────────
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      # Models are large — persist them so they survive container restarts
-      - ollama_models:/root/.ollama
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-    # Uncomment if you have an NVIDIA GPU:
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [gpu]
-
-volumes:
-  ollama_models:
