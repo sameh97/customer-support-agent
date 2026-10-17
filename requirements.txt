@@ -18,3 +18,11 @@ python-dotenv
 
 fastapi
 uvicorn[standard]
+
+
+langchain-tavily
+
+# Database
+sqlalchemy>=2.0
+psycopg[binary]
+alembic

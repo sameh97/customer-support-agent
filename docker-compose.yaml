@@ -3,12 +3,35 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"
+      - "${APP_PORT:-8000}:8000"  # host port; set APP_PORT if 8000 is taken
     env_file: .env
     environment:
-      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-support}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-support}
+      OLLAMA_BASE_URL: ${DOCKER_OLLAMA_URL:-http://host.docker.internal:11434}  # override if Ollama runs inside WSL
     volumes:
       - ./data:/app/data
     extra_hosts:
       - "host.docker.internal:host-gateway"  # makes host.docker.internal work on Linux/WSL
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-support}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-support}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    # No ports: only the app can reach the DB. Add "5432:5432" to inspect it locally.
+
+volumes:
+  pgdata:

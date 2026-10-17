@@ -113,3 +113,9 @@ venv.bak/
 # Vector databases
 **/chroma_db/
 **/.chroma/
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Human handoff queue (runtime data)
+data/escalations.jsonl

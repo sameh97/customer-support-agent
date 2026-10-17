@@ -1,0 +1,10 @@
+# Keep the build context small and avoid copying local envs / build output
+.git
+.env
+.venv
+.venvtest
+.idea
+**/__pycache__
+frontend/node_modules
+frontend/dist
+data/chroma_db

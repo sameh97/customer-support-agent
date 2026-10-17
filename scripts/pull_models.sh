@@ -3,7 +3,7 @@
 # Models are saved in the ollama_models volume — only needs to run once.
 
 echo "Pulling LLM model..."
-docker compose exec ollama ollama pull qwen2.5:3b
+docker compose exec ollama ollama pull llama3.1:8b
 
 echo "Pulling embedding model..."
 docker compose exec ollama ollama pull nomic-embed-text

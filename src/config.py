@@ -11,9 +11,12 @@ from pydantic import Field
 class Settings(BaseSettings):
 
     # ── LLM ──────────────────────────────────────────────────────────
-    ollama_model: str       = Field("qwen2.5:3b", alias="OLLAMA_MODEL")
+    ollama_model: str       = Field("llama3.1:8b", alias="OLLAMA_MODEL")
     ollama_base_url: str    = Field("http://localhost:11434", alias="OLLAMA_BASE_URL")
     temperature: float      = Field(0.2, alias="TEMPERATURE")
+    # Thinking mode for models that support it (qwen3, deepseek-r1). False = faster replies,
+    # unset = model default. Leave unset for models without thinking (llama3.1).
+    ollama_reasoning: bool | None = Field(None, alias="OLLAMA_REASONING")
 
     # ── Business identity ─────────────────────────────────────────────
     business_name: str      = Field("Acme Corp", alias="BUSINESS_NAME")
@@ -31,6 +34,10 @@ class Settings(BaseSettings):
     rag_top_k: int          = Field(5, alias="RAG_TOP_K")
     chunk_size: int         = Field(800, alias="CHUNK_SIZE")
     chunk_overlap: int      = Field(100, alias="CHUNK_OVERLAP")
+
+    # ── Database ──────────────────────────────────────────────────────
+    # Docker Compose builds this from POSTGRES_* in .env; default is for local runs
+    database_url: str       = Field("postgresql+psycopg://support:support@localhost:5432/support", alias="DATABASE_URL")
 
     # ── Gmail ─────────────────────────────────────────────────────────
     gmail_credentials_path: str = Field("config/credentials.json", alias="GMAIL_CREDENTIALS_PATH")
